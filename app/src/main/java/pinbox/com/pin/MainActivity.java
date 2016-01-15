@@ -23,44 +23,46 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private LoginButton loginButton;
-    private URL url;
-    private HttpURLConnection urlConnection;
+    private List<Username> users = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        try {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.3.2:8080")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-            url = new URL("http://localhost:8080/find/farm");
-            Log.e("check", "1");
-            urlConnection = (HttpURLConnection)url.openConnection();
-            Log.e("check", "2");
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-            Log.e("check", "3");
-            InputStream in = urlConnection.getInputStream();
-            Log.e("check", "4");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
-            while ((line = reader.readLine())!= null){
-                buffer.append(line);
+        GitApiInterface gitApiInterface = retrofit.create(GitApiInterface.class);
+
+
+
+        Call<Username> call = gitApiInterface.loadUsername();
+        call.enqueue(new Callback<Username>() {
+            @Override
+            public void onResponse(Response<Username> response) {
+                Log.e("check","4");
+
             }
-            Log.e("check", buffer.toString());
-
-        }catch (Exception e){
-
-        }finally {
-            urlConnection.disconnect();
-
-        }
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("check","5");
+            }
+        });
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
