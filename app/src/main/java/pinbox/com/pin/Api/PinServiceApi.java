@@ -1,18 +1,15 @@
-package pinbox.com.pin;
+package pinbox.com.pin.Api;
 
 
 
-import java.util.List;
-
+import pinbox.com.pin.Model.Username;
 import retrofit.Call;
 import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
 
 /**
  * Created by 015240 on 1/15/2016.
  */
-public interface GitApiInterface {
+public interface PinServiceApi {
     @GET("/find/farm")
     Call<Username> loadUsername();
 

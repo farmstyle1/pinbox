@@ -1,11 +1,15 @@
 package pinbox.com.pin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -14,17 +18,10 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
+import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Model.Username;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -34,47 +31,51 @@ import retrofit.Retrofit;
 public class MainActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
-    private LoginButton loginButton;
-    private List<Username> users = null;
+    private LoginButton loginFacebookButton;
+    private Button loginButton;
+    private SharedPreferences mPrefs;
+    private SharedPreferences.Editor mEditor;
+    private final String KEY_PREFS = "prefs_user";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.3.2:8080")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        GitApiInterface gitApiInterface = retrofit.create(GitApiInterface.class);
-
-
-
-        Call<Username> call = gitApiInterface.loadUsername();
-        call.enqueue(new Callback<Username>() {
-            @Override
-            public void onResponse(Response<Username> response) {
-                Log.e("check","4");
-
-            }
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("check","5");
-            }
-        });
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+        mPrefs = getApplicationContext().getSharedPreferences(KEY_PREFS, Context.MODE_PRIVATE);
+        mEditor = mPrefs.edit();
 
         setContentView(R.layout.activity_main);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+
+        // check user has found
+        String userKeyLogin = mPrefs.getString("KEY_USER","");
+        if (!TextUtils.isEmpty(userKeyLogin)){
+            Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
+        loginButton = (Button) findViewById(R.id.login_button);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        loginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
+
+        loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                String userFacebook = loginResult.getAccessToken().getUserId();
+                checkPrefsKey(userFacebook);
+                Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
@@ -95,21 +96,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+
+
     }
 
-    private class HttpRestClient extends AsyncTask<Void,Void,Void>{
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+    private void checkPrefsKey(String userLogin) {
+        //หาค่า KEY_PREFS แล้วเช็คว่าว่างหรือไม่
+        /*String userKeyLogin = mPrefs.getString("KEY_USERNAME","");
+        if (TextUtils.isEmpty(userKeyLogin)){
+            Log.e("check","test");
         }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-
-
-
-            return null;
-        }
+        */
+        mEditor.putString("KEY_USER", userLogin);
+        mEditor.commit();
     }
+
+
 }

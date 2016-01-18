@@ -1,4 +1,4 @@
-package pinbox.com.pin;
+package pinbox.com.pin.Model;
 
 /**
  * Created by 015240 on 1/15/2016.
