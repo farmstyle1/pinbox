@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,13 +21,18 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.List;
+import java.util.Locale;
+
+
+
 public class LocationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private SharedPreferences mPrefs;
     private SharedPreferences.Editor mEditor;
     private final String KEY_PREFS = "prefs_user";
     private Button clearButton;
     private GoogleApiClient googleApiClient;
-
+    private List<Address> addresses;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +98,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
+
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -106,6 +114,23 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     public void onLocationChanged(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        Log.e("check",latitude+" lat");
+
+        Geocoder gdc = new Geocoder(LocationActivity.this, Locale.ENGLISH);
+        try {
+            addresses = gdc.getFromLocation(latitude, longitude, 1);
+            Log.e("check",addresses.get(0).getAdminArea());
+            /*
+            getAddressLine(0) //ชื่อซอย หรือ ชื่อตำบล
+            getLocality() //ชื่ออำเภอ
+            getAdminArea() //ชื่อจังหวัด
+            getCountryName() //ชื่อประเทศ
+            getCountryCode()  //รหัสประเทศ
+            getPostalCode() //รหัสไปรษณีย์
+            */
+        }catch (Exception e){
+            Log.e("check","Exep "+ e);
+        }
+
+
     }
 }
