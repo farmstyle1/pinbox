@@ -1,115 +1,75 @@
 package pinbox.com.pin;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import android.widget.TextView;
 
-import java.util.List;
-
-import pinbox.com.pin.Api.PinServiceApi;
-import pinbox.com.pin.Model.Username;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
+import pinbox.com.pin.Adapter.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CallbackManager callbackManager;
-    private LoginButton loginFacebookButton;
-    private Button loginButton;
-    private SharedPreferences mPrefs;
-    private SharedPreferences.Editor mEditor;
-    private final String KEY_PREFS = "prefs_user";
 
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        mPrefs = getApplicationContext().getSharedPreferences(KEY_PREFS, Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
-
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
-        // check user has found
-        String userKeyLogin = mPrefs.getString("KEY_USER","");
-        if (!TextUtils.isEmpty(userKeyLogin)){
-            Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-        loginButton = (Button) findViewById(R.id.login_button);
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-        loginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
-
-        loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                String userFacebook = loginResult.getAccessToken().getUserId();
-                checkPrefsKey(userFacebook);
-                Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-
 
     }
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    private void checkPrefsKey(String userLogin) {
-        //หาค่า KEY_PREFS แล้วเช็คว่าว่างหรือไม่
-        /*String userKeyLogin = mPrefs.getString("KEY_USERNAME","");
-        if (TextUtils.isEmpty(userKeyLogin)){
-            Log.e("check","test");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
         }
-        */
-        mEditor.putString("KEY_USER", userLogin);
-        mEditor.commit();
+        return super.onOptionsItemSelected(item);
     }
+
+
+
 
 
 }

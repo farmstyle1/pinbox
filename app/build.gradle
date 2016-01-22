@@ -28,4 +28,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.google.android.gms:play-services-location:7.5.0'
+    compile 'com.android.support:design:23.1.1'
 }
