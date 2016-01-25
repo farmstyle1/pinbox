@@ -28,16 +28,24 @@ import com.google.android.gms.location.LocationServices;
 import java.util.List;
 import java.util.Locale;
 
+import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Helper.LocationHelper;
 import pinbox.com.pin.Helper.UserHelper;
+import pinbox.com.pin.Model.Username;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class LocationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private  LocationHelper locationHelper;
+    private LocationHelper locationHelper;
+    private UserHelper userHelper;
     private GoogleApiClient googleApiClient;
     private List<Address> addresses;
-    private String locationKey, cityName;
+    private String locationKey, cityName, user;
     private TextView txtLocation,txtCheckIn,txtSkip;
     private Switch swCheckin;
 
@@ -47,6 +55,9 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
 
         setContentView(R.layout.activity_location);
 
+        userHelper = new UserHelper(this);
+        user = userHelper.getUserID();
+        Log.e("check","user "+user);
         locationHelper = new LocationHelper(this);
         locationKey = locationHelper.getLocation();
 
@@ -118,7 +129,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
 
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(final Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         // Get City name.
@@ -146,6 +157,25 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                             if (isChecked){
                                 locationHelper.setLocation(cityName);
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl("http://10.0.3.2:8080")
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+                                PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
+                                Username username = new Username(user,cityName);
+                                Call<Username> call = pinServiceApi.updateLocation(username);
+                                call.enqueue(new Callback<Username>() {
+                                    @Override
+                                    public void onResponse(Response<Username> response) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Throwable t) {
+                                        Log.e("check","throwable "+t);
+                                    }
+                                });
+
                             }else{
 
                             }
