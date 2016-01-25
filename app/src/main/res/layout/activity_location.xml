@@ -8,12 +8,22 @@
     tools:context="pinbox.com.pin.LocationActivity"
     android:background="@color/primary">
 
-    <View
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/skip_button"
+        android:textColor="@color/white"
+        android:text="SKIP"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"/>
+
+     <View
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:background="#ffffff"/>
 
     <LinearLayout
+
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +41,6 @@
             android:id="@+id/txtLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location"
             android:textColor="@color/white"
             android:textSize="50dp"
             android:gravity="center"
@@ -47,14 +56,17 @@
             android:layout_marginTop="20dp"
 
             />
-        <Button
-            android:layout_width="match_parent"
+
+        <Switch
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/skip_button"
-            android:background="@color/white"
-            android:text="SKIP"
-            android:layout_margin="20dp"/>
-        </LinearLayout>>
+            android:text="Check in "
+            android:id="@+id/switch_checkin"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal" />
+
+
+        </LinearLayout>
 
 
 

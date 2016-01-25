@@ -9,8 +9,8 @@ import pinbox.com.pin.Fragment.PlaceholderFragment;
 /**
  * Created by 015240 on 1/22/2016.
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
-    public SectionsPagerAdapter(FragmentManager fm) {
+public class MainPagerAdapter extends FragmentPagerAdapter {
+    public MainPagerAdapter(FragmentManager fm) {
         super(fm);
     }
     @Override

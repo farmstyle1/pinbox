@@ -14,10 +14,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -28,39 +28,40 @@ import com.google.android.gms.location.LocationServices;
 import java.util.List;
 import java.util.Locale;
 
+import pinbox.com.pin.Helper.LocationHelper;
+import pinbox.com.pin.Helper.UserHelper;
+
 
 public class LocationActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private SharedPreferences mPrefs;
-    private SharedPreferences.Editor mEditor;
-    private final String KEY_LOCATION = "prefs_location";
-    private Button skipButton;
+
+    private  LocationHelper locationHelper;
     private GoogleApiClient googleApiClient;
     private List<Address> addresses;
     private String locationKey, cityName;
-    private TextView txtlocation,txtCheckIn;
+    private TextView txtLocation,txtCheckIn,txtSkip;
+    private Switch swCheckin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefs = getApplicationContext().getSharedPreferences(KEY_LOCATION, Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
+
         setContentView(R.layout.activity_location);
 
+        locationHelper = new LocationHelper(this);
+        locationKey = locationHelper.getLocation();
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
-                .build();
+                .build(); // if success,Call onConnected method.
 
-        txtlocation = (TextView)findViewById(R.id.txtLocation);
+        txtLocation = (TextView)findViewById(R.id.txtLocation);
         txtCheckIn = (TextView)findViewById(R.id.txtCheckIn);
+        swCheckin = (Switch)findViewById(R.id.switch_checkin);
 
-        locationKey = mPrefs.getString("KEY_LOCATION", "");
-        txtlocation.setText(locationKey);
-
-        skipButton = (Button)findViewById(R.id.skip_button);
-        skipButton.setOnClickListener(new View.OnClickListener() {
+        txtSkip = (TextView)findViewById(R.id.skip_button);
+        txtSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
@@ -90,10 +91,15 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     public void onConnected(Bundle bundle) {
         LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
+
+        // Check GPS Available.
         if (locationAvailability.isLocationAvailable()) {
+
+
             LocationRequest locationRequest = new LocationRequest()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, LocationActivity.this);
+            // Get location sent to onLocationChanged method.
         } else {
             Log.e("check", "GPS disable");
         }
@@ -115,6 +121,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
     public void onLocationChanged(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+        // Get City name.
         Geocoder gdc = new Geocoder(LocationActivity.this, Locale.ENGLISH);
         try {
             addresses = gdc.getFromLocation(latitude, longitude, 1);
@@ -128,11 +135,24 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
             getPostalCode() //รหัสไปรษณีย์
             */
             if (TextUtils.isEmpty(locationKey)) {
-                commitLocation(cityName);
+
             } else {
                 if (!cityName.equals(locationKey)) {
-                    txtlocation.setText(cityName);
+                    txtLocation.setText(cityName);
                     txtCheckIn.setText("ต้องการ Check-In หรือไม่");
+                    swCheckin.setVisibility(View.VISIBLE);
+                    swCheckin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked){
+                                locationHelper.setLocation(cityName);
+                            }else{
+
+                            }
+                        }
+                    });
+                }else{
+                    txtLocation.setText(locationKey);
                 }
             }
         } catch (Exception e) {
@@ -143,11 +163,7 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
         }
     }
 
-    private void commitLocation(String city) {
-        Log.e("check", "commit location ");
-        mEditor.putString("KEY_LOCATION", city);
-        mEditor.commit();
-    }
+
 
 
 }

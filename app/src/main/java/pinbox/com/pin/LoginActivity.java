@@ -16,14 +16,15 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import pinbox.com.pin.Helper.UserHelper;
+
 public class LoginActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private LoginButton loginFacebookButton;
     private Button loginButton;
-    private SharedPreferences mPrefs;
-    private SharedPreferences.Editor mEditor;
-    private final String KEY_PREFS = "prefs_user";
+    private UserHelper userHelper;
+
 
 
     @Override
@@ -31,15 +32,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-        mPrefs = getApplicationContext().getSharedPreferences(KEY_PREFS, Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
+
 
         setContentView(R.layout.activity_login);
 
 
-
+        userHelper = new UserHelper(this);
+        String userKeyLogin = userHelper.getUserID();
         // check user has found
-        String userKeyLogin = mPrefs.getString("KEY_USER","");
+
         if (!TextUtils.isEmpty(userKeyLogin)){
             Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
             startActivity(intent);
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String userFacebook = loginResult.getAccessToken().getUserId();
-                checkPrefsKey(userFacebook);
+                userHelper.createSession(userFacebook);
                 Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
                 startActivity(intent);
                 finish();
@@ -88,16 +89,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void checkPrefsKey(String userLogin) {
-        //หาค่า KEY_PREFS แล้วเช็คว่าว่างหรือไม่
-        /*String userKeyLogin = mPrefs.getString("KEY_USERNAME","");
-        if (TextUtils.isEmpty(userKeyLogin)){
-            Log.e("check","test");
-        }
-        */
-        mEditor.putString("KEY_USER", userLogin);
-        mEditor.commit();
-    }
 
 
 }
