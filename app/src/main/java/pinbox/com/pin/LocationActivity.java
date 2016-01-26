@@ -158,7 +158,8 @@ public class LocationActivity extends AppCompatActivity implements GoogleApiClie
                             if (isChecked){
                                 locationHelper.setLocation(cityName);
                                 Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl("http://10.0.3.2:8080")
+                                        //.baseUrl("http://10.0.3.2:8080")
+                                        .baseUrl("http://128.199.141.126:8080")
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
                                 PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);

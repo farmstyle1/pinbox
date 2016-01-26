@@ -16,7 +16,14 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Helper.UserHelper;
+import pinbox.com.pin.Model.Username;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -62,6 +69,25 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 String userFacebook = loginResult.getAccessToken().getUserId();
                 userHelper.createSession(userFacebook);
+                Retrofit retrofit = new Retrofit.Builder()
+                        //.baseUrl("http://10.0.3.2:8080")
+                        .baseUrl("http://128.199.141.126:8080")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
+                Username username = new Username(userFacebook,null);
+                Call<Username> call = pinServiceApi.newUser(username);
+                call.enqueue(new Callback<Username>() {
+                    @Override
+                    public void onResponse(Response<Username> response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+
+                    }
+                });
                 Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
                 startActivity(intent);
                 finish();
