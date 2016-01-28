@@ -14,7 +14,6 @@ public class LocationHelper {
     // Prefs Keys
     static String perfsName = "prefs_location";
 
-
     public LocationHelper(Context context) {
         this.context = context;
         this.sharedPerfs = this.context.getSharedPreferences(perfsName, Context.MODE_PRIVATE);
