@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+        <!-- <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="เพิ่มเพื่อน"
+            android:textSize="18dp"
+            android:layout_margin="20dp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:id="@+id/search_friend"
+            android:hint="ID เพื่อน"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/login_button"
+            android:background="@drawable/button_border"
+            android:textColor="#ffffff"
+            android:text="ค้นหา"
+            android:textSize="15dp"
+            android:layout_marginTop="30dp"/> -->
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/row_imageView1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/button_border" />
+
+        <TextView
+            android:id="@+id/row_user1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Profile"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#333333" />
+
+
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#f6f6f6"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/row_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ตั่งค่า ID"
+            android:textColor="#333333" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#f6f6f6"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/row_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ออกจากระบบ"
+            android:textColor="#333333" />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#f6f6f6"/>
+</LinearLayout>

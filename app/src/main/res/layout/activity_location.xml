@@ -46,16 +46,7 @@
             />
 
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check in "
-            android:textColor="@color/white"
-            android:id="@+id/switch_checkin"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            />
+
         <Button
             android:layout_width="200dp"
             android:layout_height="wrap_content"

@@ -69,7 +69,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
         loginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
