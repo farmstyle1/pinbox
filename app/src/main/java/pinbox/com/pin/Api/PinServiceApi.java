@@ -2,6 +2,9 @@ package pinbox.com.pin.Api;
 
 
 
+import java.util.List;
+
+import pinbox.com.pin.Model.UserModel;
 import pinbox.com.pin.Model.Username;
 import retrofit.Call;
 import retrofit.http.Body;
@@ -18,7 +21,10 @@ public interface PinServiceApi {
     @POST("/newuser")
     Call<Username> newUser(@Body Username username);
 
+    @POST("/update_id")
+    Call<UserModel> updateID(@Body UserModel userModel);
+
     @POST("/update_location")
-    Call<Username> updateLocation(@Body Username username);
+    Call<UserModel> updateLocation(@Body UserModel userModel);
 
 }

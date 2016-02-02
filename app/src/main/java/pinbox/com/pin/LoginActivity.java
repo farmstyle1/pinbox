@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,13 +47,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-
-
         setContentView(R.layout.activity_login);
+
+
 
 
         userHelper = new UserHelper(this);
@@ -82,8 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                 String userFacebook = loginResult.getAccessToken().getUserId();
                 userHelper.createSession(userFacebook);
                 Retrofit retrofit = new Retrofit.Builder()
-                        //.baseUrl("http://10.0.3.2:8080")
-                        .baseUrl("http://128.199.141.126:8080")
+                        .baseUrl("http://10.0.3.2:8080")
+                        //.baseUrl("http://128.199.141.126:8080")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
