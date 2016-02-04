@@ -14,4 +14,5 @@
     <string name="id">ID</string>
     <string name="save">บันทึก</string>
     <string name="id_friend">ID เพื่อน</string>
+    <string name="add_friend">เพิ่มเพื่อน</string>
 </resources>

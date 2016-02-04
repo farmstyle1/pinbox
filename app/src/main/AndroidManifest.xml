@@ -34,7 +34,8 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme" />
-        <activity android:name=".AddIdActivity"></activity>
+        <activity android:name=".AddActivity.AddIdActivity" />
+        <activity android:name=".AddActivity.AddFriendActivity"></activity>
     </application>
 
 </manifest>

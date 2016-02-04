@@ -20,14 +20,21 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.UserHelper;
+import pinbox.com.pin.Model.UserModel;
 import pinbox.com.pin.Model.Username;
 import retrofit.Call;
 import retrofit.Callback;
@@ -40,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginFacebookButton;
     private Button loginButton;
-    private UserHelper userHelper;
+    private Helper helper;
 
 
 
@@ -54,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        userHelper = new UserHelper(this);
-        String userKeyLogin = userHelper.getUserID();
+        helper = new Helper(this);
+        String userKeyLogin = helper.getUsername();
         // check user has found
 
         if (!TextUtils.isEmpty(userKeyLogin)){
@@ -75,34 +82,51 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         loginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
-
         loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 String userFacebook = loginResult.getAccessToken().getUserId();
-                userHelper.createSession(userFacebook);
+                helper.setUsername(userFacebook);
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://10.0.3.2:8080")
                         //.baseUrl("http://128.199.141.126:8080")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
-                Username username = new Username(userFacebook,null);
-                Call<Username> call = pinServiceApi.newUser(username);
-                call.enqueue(new Callback<Username>() {
+
+                UserModel userModel = new UserModel();
+                userModel.setUsername(userFacebook);
+                Call<UserModel> call = pinServiceApi.newUser(userModel);
+                call.enqueue(new Callback<UserModel>() {
                     @Override
-                    public void onResponse(Response<Username> response) {
-                        Log.e("check","success");
+                    public void onResponse(Response<UserModel> response) {
+                        if (response.body().getStatus()) {
+
+                        } else {
+
+
+                        }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Log.e("check","faill "+t);
+                        Log.e("check", "faill " + t);
                     }
                 });
+
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.e("check", Profile.getCurrentProfile().getFirstName());
+                    }
+                });
+                request.executeAsync();
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
                 finish();
+
+
             }
 
             @Override

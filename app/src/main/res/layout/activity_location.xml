@@ -8,15 +8,21 @@
     tools:context="pinbox.com.pin.LocationActivity"
     android:background="@color/primary">
 
-
-    <TextView
+    <FrameLayout
+        android:id="@+id/layout_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/skip_button"
-        android:textColor="@color/white"
-        android:text="SKIP"
         android:layout_alignParentRight="true"
-        android:layout_margin="20dp"/>
+        android:padding="10dp"
+        android:layout_margin="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="SKIP"
+                />
+    </FrameLayout>
+
 
 
 

@@ -25,10 +25,6 @@ public class LocationHelper {
         editor.commit();
     }
 
-    public void deleteSession() {
-        editor.clear();
-        editor.commit();
-    }
 
     public String getLocation() {
         return sharedPerfs.getString("KEY_LOCATION", null);

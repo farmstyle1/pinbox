@@ -7,6 +7,7 @@ import android.content.pm.Signature;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pinbox.com.pin.Adapter.MainPagerAdapter;
+import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.LocationHelper;
 import pinbox.com.pin.Helper.UserHelper;
 
@@ -44,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private GoogleApiClient googleApiClient;
     private MainPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
+    private Helper helper;
+    private String lastLocation, currentLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
+
+
+
     }
 
 
@@ -83,8 +90,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            UserHelper userHelper = new UserHelper(this);
-            userHelper.deleteSession();
+            Helper helper = new Helper(this);
+            helper.deleteUsername();
             LoginManager.getInstance().logOut();
 
             Intent intent = new Intent(getApplication(), LoginActivity.class);
@@ -122,7 +129,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Geocoder gdc = new Geocoder(MainActivity.this, Locale.getDefault());
         try {
             List<Address> addresses = gdc.getFromLocation(latitude, longitude, 1);
-            String currentLocation = addresses.get(0).getAdminArea();
+            currentLocation = addresses.get(0).getAdminArea();
+            if (TextUtils.isEmpty(currentLocation)){
+                currentLocation = addresses.get(0).getLocality();
+            }
             /*
             getAddressLine(0) //ชื่อซอย หรือ ชื่อตำบล
             getLocality() //ชื่ออำเภอ
@@ -131,26 +141,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             getCountryCode()  //รหัสประเทศ
             getPostalCode() //รหัสไปรษณีย์
             */
-            LocationHelper locationHelper = new LocationHelper(this);
-            String lastLocation = locationHelper.getLocation();
-            if( lastLocation==null){
+            helper = new Helper(this);
+            lastLocation = helper.getLocation();
+            if(TextUtils.isEmpty(lastLocation)){
 
-                Intent intent = new Intent(getApplication(), LocationActivity.class);
-                intent.putExtra("currentLocation",currentLocation);
-                startActivity(intent);
-                googleApiClient.disconnect();
-            }
-
-            if (!lastLocation.equals(currentLocation)){
                 Intent intent = new Intent(getApplication(), LocationActivity.class);
                 intent.putExtra("currentLocation",currentLocation);
                 startActivity(intent);
                 googleApiClient.disconnect();
             }else{
-                googleApiClient.disconnect();
+                if (!lastLocation.equals(currentLocation)){
+                    Intent intent = new Intent(getApplication(), LocationActivity.class);
+                    intent.putExtra("currentLocation", currentLocation);
+                    startActivity(intent);
+
+                    googleApiClient.disconnect();
+                }else{
+                    googleApiClient.disconnect();
+                }
             }
-
-
         } catch (Exception e) {
             Log.e("check", "Exep " + e);
             googleApiClient.disconnect();

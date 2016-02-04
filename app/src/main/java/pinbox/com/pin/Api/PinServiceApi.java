@@ -19,12 +19,15 @@ public interface PinServiceApi {
     Call<Username> loadUsername();
 
     @POST("/newuser")
-    Call<Username> newUser(@Body Username username);
+    Call<UserModel> newUser(@Body UserModel userModel);
 
     @POST("/update_id")
     Call<UserModel> updateID(@Body UserModel userModel);
 
     @POST("/update_location")
     Call<UserModel> updateLocation(@Body UserModel userModel);
+
+    @POST("/update_name")
+    Call<UserModel> updateName(@Body UserModel userModel);
 
 }

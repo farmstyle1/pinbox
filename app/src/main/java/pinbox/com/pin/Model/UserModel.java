@@ -7,18 +7,25 @@ public class UserModel {
     String username;
     String location;
     String id;
+    String name;
     boolean status;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public void setStatus(boolean status) {
         this.status = status;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
 
         return status;
     }
-
-
 
     public String getUsername() {
         return username;

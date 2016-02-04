@@ -1,4 +1,4 @@
-package pinbox.com.pin;
+package pinbox.com.pin.AddActivity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.List;
-
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.UserHelper;
 import pinbox.com.pin.Model.UserModel;
-import pinbox.com.pin.Model.Username;
+import pinbox.com.pin.R;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -24,20 +23,21 @@ public class AddIdActivity extends AppCompatActivity {
     private EditText editTextID;
     private Button btnSaveID;
     private String user;
+    private Helper helper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_id);
 
-        UserHelper userHelper = new UserHelper(this);
-        user = userHelper.getUserID();
+        helper = new Helper(this);
+        user = helper.getUsername();
 
         editTextID = (EditText)findViewById(R.id.id_edittext);
         btnSaveID = (Button)findViewById(R.id.save_id_button);
         btnSaveID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String valID = editTextID.getText().toString();
+                final String valID = editTextID.getText().toString();
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://10.0.3.2:8080")
                         //.baseUrl("http://128.199.141.126:8080")
@@ -53,8 +53,9 @@ public class AddIdActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response<UserModel> response) {
 
-                        if(response.body().isStatus()){
+                        if(response.body().getStatus()){
                             Toast.makeText(AddIdActivity.this, "บันทึก ID สำเร็จ", Toast.LENGTH_SHORT).show();
+                            helper.setId(valID);
                             finish();
                         }else{
                             Toast.makeText(AddIdActivity.this, "ID นี้ไม่สามารถใช้ได้", Toast.LENGTH_SHORT).show();

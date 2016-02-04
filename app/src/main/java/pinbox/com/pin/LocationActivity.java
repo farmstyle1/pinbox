@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.LocationHelper;
 import pinbox.com.pin.Helper.UserHelper;
 import pinbox.com.pin.Model.UserModel;
@@ -44,13 +46,13 @@ import retrofit.Retrofit;
 
 public class LocationActivity extends AppCompatActivity {
 
-    private LocationHelper locationHelper;
-    private UserHelper userHelper;
+
+    private Helper helper;
     private String cityName, user;
-    private TextView txtLocation, txtSkip;
+    private TextView txtLocation;
     private Button btnCheckin;
     private PinServiceApi pinServiceApi;
-
+    private FrameLayout skipLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +60,10 @@ public class LocationActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         cityName = bundle.getString("currentLocation");
+        Log.d("check",cityName);
+        helper = new Helper(this);
+        user = helper.getUsername();
 
-        userHelper = new UserHelper(this);
-        user = userHelper.getUserID();
-        locationHelper = new LocationHelper(this);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.3.2:8080")
@@ -88,7 +90,7 @@ public class LocationActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response<UserModel> response) {
                         if (cityName.equals(response.body().getLocation())) {
-                            locationHelper.setLocation(cityName);
+                            helper.setLocation(cityName);
                             finish();
                         }
                     }
@@ -104,8 +106,8 @@ public class LocationActivity extends AppCompatActivity {
         });
 
 
-        txtSkip = (TextView) findViewById(R.id.skip_button);
-        txtSkip.setOnClickListener(new View.OnClickListener() {
+        skipLayout = (FrameLayout) findViewById(R.id.layout_skip);
+        skipLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
