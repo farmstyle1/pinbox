@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Api.URL;
 import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.LocationHelper;
 import pinbox.com.pin.Helper.UserHelper;
@@ -60,14 +61,12 @@ public class LocationActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         cityName = bundle.getString("currentLocation");
-        Log.d("check",cityName);
         helper = new Helper(this);
         user = helper.getUsername();
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.3.2:8080")
-                //.baseUrl("http://128.199.141.126:8080")
+                .baseUrl(URL.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pinServiceApi = retrofit.create(PinServiceApi.class);
@@ -89,7 +88,7 @@ public class LocationActivity extends AppCompatActivity {
                 call.enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Response<UserModel> response) {
-                        if (cityName.equals(response.body().getLocation())) {
+                        if (response.body().getStatus()) {
                             helper.setLocation(cityName);
                             finish();
                         }

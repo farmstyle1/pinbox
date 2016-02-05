@@ -12,17 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.gson.annotations.Until;
 
 import pinbox.com.pin.AddActivity.AddIdActivity;
 import pinbox.com.pin.Helper.Helper;
+import pinbox.com.pin.LoginActivity;
 import pinbox.com.pin.R;
 
 /**
  * Created by Miki on 1/29/2016.
  */
 public class OptionFragment extends Fragment{
-    private RelativeLayout addID;
+    private RelativeLayout addID,logout;
     private TextView currentID;
     private Helper helper;
     private String valCurrentID;
@@ -32,6 +34,18 @@ public class OptionFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_option,container,false);
         helper = new Helper(getActivity());
 
+        logout = (RelativeLayout)rootView.findViewById(R.id.row_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Helper helper = new Helper(getActivity());
+                helper.logout();
+                LoginManager.getInstance().logOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
         addID = (RelativeLayout)rootView.findViewById(R.id.row_id);
         addID.setOnClickListener(new View.OnClickListener(){
             @Override

@@ -1,4 +1,6 @@
 <resources>
+
+
     <string name="app_name">Pin</string>
     <string name="facebook_app_id">956100104461852</string>
     <string name="login">Login</string>
@@ -15,4 +17,5 @@
     <string name="save">บันทึก</string>
     <string name="id_friend">ID เพื่อน</string>
     <string name="add_friend">เพิ่มเพื่อน</string>
+
 </resources>

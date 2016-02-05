@@ -32,6 +32,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Api.URL;
 import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.UserHelper;
 import pinbox.com.pin.Model.UserModel;
@@ -84,27 +85,45 @@ public class LoginActivity extends AppCompatActivity {
         loginFacebookButton = (LoginButton) findViewById(R.id.login_facebook_button);
         loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
 
                 String userFacebook = loginResult.getAccessToken().getUserId();
                 helper.setUsername(userFacebook);
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://10.0.3.2:8080")
-                        //.baseUrl("http://128.199.141.126:8080")
+                        .baseUrl(URL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
+                final PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
 
-                UserModel userModel = new UserModel();
+                final UserModel userModel = new UserModel();
                 userModel.setUsername(userFacebook);
                 Call<UserModel> call = pinServiceApi.newUser(userModel);
                 call.enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Response<UserModel> response) {
                         if (response.body().getStatus()) {
+                            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(JSONObject object, GraphResponse response) {
 
-                        } else {
+                                    //Log.e("check", Profile.getCurrentProfile().getFirstName());
+                                    userModel.setName(Profile.getCurrentProfile().getFirstName());
+                                    Call<UserModel> calls = pinServiceApi.updateName(userModel);
+                                    calls.enqueue(new Callback<UserModel>() {
+                                        @Override
+                                        public void onResponse(Response<UserModel> response) {
 
+                                        }
+
+                                        @Override
+                                        public void onFailure(Throwable t) {
+
+                                        }
+                                    });
+
+                                }
+                            });
+                            request.executeAsync();
 
                         }
                     }
@@ -115,13 +134,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.e("check", Profile.getCurrentProfile().getFirstName());
-                    }
-                });
-                request.executeAsync();
                 Intent intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
                 finish();

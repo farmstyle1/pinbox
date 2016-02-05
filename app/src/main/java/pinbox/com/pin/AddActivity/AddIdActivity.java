@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import pinbox.com.pin.Api.PinServiceApi;
+import pinbox.com.pin.Api.URL;
 import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Helper.UserHelper;
 import pinbox.com.pin.Model.UserModel;
@@ -39,8 +40,7 @@ public class AddIdActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String valID = editTextID.getText().toString();
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://10.0.3.2:8080")
-                        //.baseUrl("http://128.199.141.126:8080")
+                        .baseUrl(URL.URL)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);

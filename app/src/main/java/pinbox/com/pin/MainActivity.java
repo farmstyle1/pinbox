@@ -90,13 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Helper helper = new Helper(this);
-            helper.deleteUsername();
-            LoginManager.getInstance().logOut();
 
-            Intent intent = new Intent(getApplication(), LoginActivity.class);
-            startActivity(intent);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

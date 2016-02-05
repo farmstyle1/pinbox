@@ -40,8 +40,10 @@ public class Helper {
         editor.commit();
     }
 
-    public void deleteUsername() {
-        editor.clear();
+    public void logout() {
+        editor.remove("KEY_USER");
+        editor.remove("KEY_LOCATION");
+        editor.putBoolean("isLogin", false);
         editor.commit();
     }
 
