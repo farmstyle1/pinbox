@@ -49,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginFacebookButton;
     private Button loginButton;
     private Helper helper;
+    private UserModel userModel;
+    private PinServiceApi pinServiceApi;
 
 
 
@@ -72,6 +74,13 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+       pinServiceApi = retrofit.create(PinServiceApi.class);
+
+        userModel = new UserModel();
 
         loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -89,54 +98,31 @@ public class LoginActivity extends AppCompatActivity {
 
                 String userFacebook = loginResult.getAccessToken().getUserId();
                 helper.setUsername(userFacebook);
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(URL.URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                final PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
 
-                final UserModel userModel = new UserModel();
                 userModel.setUsername(userFacebook);
-                Call<UserModel> call = pinServiceApi.newUser(userModel);
-                call.enqueue(new Callback<UserModel>() {
+                Call<UserModel> callUser = pinServiceApi.loadUsername(userFacebook);
+                callUser.enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Response<UserModel> response) {
-                        if (response.body().getStatus()) {
-                            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(JSONObject object, GraphResponse response) {
+                        if(!TextUtils.isEmpty(response.body().getUsername())){
+                            if(!TextUtils.isEmpty(response.body().getId())) {
+                               helper.setId(response.body().getId());
+                            }
 
-                                    //Log.e("check", Profile.getCurrentProfile().getFirstName());
-                                    userModel.setName(Profile.getCurrentProfile().getFirstName());
-                                    Call<UserModel> calls = pinServiceApi.updateName(userModel);
-                                    calls.enqueue(new Callback<UserModel>() {
-                                        @Override
-                                        public void onResponse(Response<UserModel> response) {
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Throwable t) {
-
-                                        }
-                                    });
-
-                                }
-                            });
-                            request.executeAsync();
-
+                            Intent intent = new Intent(getApplication(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            login(loginResult);
                         }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-                        Log.e("check", "faill " + t);
+
                     }
                 });
 
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                finish();
 
 
             }
@@ -161,6 +147,50 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
 
+    }
+    private void login(final LoginResult loginResult){
+        Log.d("check", "Login function");
+        Call<UserModel> call = pinServiceApi.newUser(userModel);
+        call.enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Response<UserModel> response) {
+                Log.d("check", "Login Success ");
+                if (response.body().getStatus()) {
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+
+                            //Log.e("check", Profile.getCurrentProfile().getFirstName());
+                            userModel.setName(Profile.getCurrentProfile().getFirstName());
+                            Call<UserModel> calls = pinServiceApi.updateName(userModel);
+                            calls.enqueue(new Callback<UserModel>() {
+                                @Override
+                                public void onResponse(Response<UserModel> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Throwable t) {
+
+                                }
+                            });
+
+                        }
+                    });
+                    request.executeAsync();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("check", "faill " + t);
+            }
+        });
+
+        Intent intent = new Intent(getApplication(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

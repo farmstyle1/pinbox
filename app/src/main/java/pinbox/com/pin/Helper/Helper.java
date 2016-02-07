@@ -41,8 +41,7 @@ public class Helper {
     }
 
     public void logout() {
-        editor.remove("KEY_USER");
-        editor.remove("KEY_LOCATION");
+        editor.clear();
         editor.putBoolean("isLogin", false);
         editor.commit();
     }
