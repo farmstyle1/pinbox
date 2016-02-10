@@ -33,6 +33,7 @@ public class Helper {
     public void setUsername(String username) {
         editor.putBoolean("isLogin", true);
         editor.putString("KEY_USER", username);
+
         editor.commit();
     }
     public void setId(String id) {

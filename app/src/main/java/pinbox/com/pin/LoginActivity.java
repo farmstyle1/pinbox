@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -23,6 +24,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private Helper helper;
     private UserModel userModel;
     private PinServiceApi pinServiceApi;
+    private String userFacebook;
 
 
 
@@ -69,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         // check user has found
 
         if (!TextUtils.isEmpty(userKeyLogin)){
+
             Intent intent = new Intent(getApplication(), MainActivity.class);
             startActivity(intent);
             finish();
@@ -95,9 +99,9 @@ public class LoginActivity extends AppCompatActivity {
         loginFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
+                loginFacebookButton.setVisibility(View.GONE);
+                userFacebook = loginResult.getAccessToken().getUserId();
 
-                String userFacebook = loginResult.getAccessToken().getUserId();
-                helper.setUsername(userFacebook);
 
                 userModel.setUsername(userFacebook);
                 Call<UserModel> callUser = pinServiceApi.loadUsername(userFacebook);
@@ -108,18 +112,23 @@ public class LoginActivity extends AppCompatActivity {
                             if(!TextUtils.isEmpty(response.body().getId())) {
                                helper.setId(response.body().getId());
                             }
+                            helper.setUsername(userFacebook);
 
                             Intent intent = new Intent(getApplication(), MainActivity.class);
                             startActivity(intent);
                             finish();
                         }else{
+
                             login(loginResult);
+
                         }
                     }
 
                     @Override
                     public void onFailure(Throwable t) {
-
+                        Toast.makeText(getApplication(), "การเชื่อมต่อล้มเหลว", Toast.LENGTH_SHORT).show();
+                        LoginManager.getInstance().logOut();
+                        loginFacebookButton.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -149,24 +158,20 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void login(final LoginResult loginResult){
-        Log.d("check", "Login function");
+
         Call<UserModel> call = pinServiceApi.newUser(userModel);
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Response<UserModel> response) {
-                Log.d("check", "Login Success ");
                 if (response.body().getStatus()) {
-                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
 
-                            //Log.e("check", Profile.getCurrentProfile().getFirstName());
                             userModel.setName(Profile.getCurrentProfile().getFirstName());
                             Call<UserModel> calls = pinServiceApi.updateName(userModel);
                             calls.enqueue(new Callback<UserModel>() {
                                 @Override
                                 public void onResponse(Response<UserModel> response) {
-
+                                    helper.setUsername(userFacebook);
+                                    Log.d("check", "key " + userFacebook);
                                 }
 
                                 @Override
@@ -175,9 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
 
-                        }
-                    });
-                    request.executeAsync();
+
 
                 }
             }

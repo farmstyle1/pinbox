@@ -1,5 +1,10 @@
 package pinbox.com.pin.AddActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,10 +12,24 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
+import com.facebook.login.widget.ProfilePictureView;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 
 import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Api.URL;
@@ -27,13 +46,18 @@ public class AddFriendActivity extends AppCompatActivity {
     private ImageView searchImage;
     private EditText friendEditText;
     private TextView friendName;
+    private ProfilePictureView profilePictureView;
+    private Button saveFriend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
 
+        profilePictureView = (ProfilePictureView)findViewById(R.id.friendProfilePicture);
         friendName = (TextView)findViewById(R.id.friend_name);
+        saveFriend = (Button)findViewById(R.id.save_friend_button);
         friendEditText = (EditText)findViewById(R.id.friend_id);
         friendEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -52,7 +76,7 @@ public class AddFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (friendEditText.getText().toString().matches("")) {
                     Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     searchID(friendEditText.getText().toString());
                 }
 
@@ -67,17 +91,22 @@ public class AddFriendActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         PinServiceApi pinServiceApi = retrofit.create(PinServiceApi.class);
-        Helper helper = new Helper(this);
         Call<UserModel> call = pinServiceApi.loadID(id);
         call.enqueue(new Callback<UserModel>() {
             @Override
             public void onResponse(Response<UserModel> response) {
-               if(!TextUtils.isEmpty(response.body().getId())){
-                   Log.d("check",response.body().getId());
-                   friendName.setText(response.body().getName());
-               }else{
-                   Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
-               }
+                if (!TextUtils.isEmpty(response.body().getId())) {
+
+                    friendName.setText(response.body().getName());
+                    profilePictureView.setVisibility(View.VISIBLE);
+                    saveFriend.setVisibility(View.VISIBLE);
+                    profilePictureView.setProfileId(response.body().getUsername());
+                } else {
+                    friendName.setText("");
+                    profilePictureView.setVisibility(View.GONE);
+                    saveFriend.setVisibility(View.GONE);
+                    Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -87,4 +116,6 @@ public class AddFriendActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
