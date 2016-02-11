@@ -63,7 +63,7 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Toast.makeText(getApplication(), "กำลังค้นหา", Toast.LENGTH_SHORT).show();
+                    searchID(friendEditText.getText().toString());
                     return true;
                 }
                 return false;
@@ -103,7 +103,7 @@ public class AddFriendActivity extends AppCompatActivity {
                     profilePictureView.setProfileId(response.body().getUsername());
                 } else {
                     friendName.setText("");
-                    profilePictureView.setVisibility(View.GONE);
+                    profilePictureView.setProfileId(null);
                     saveFriend.setVisibility(View.GONE);
                     Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
                 }

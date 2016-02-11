@@ -21,7 +21,7 @@
             android:id="@+id/friendProfilePicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+
             />
         <TextView
             android:id="@+id/friend_name"
@@ -47,8 +47,8 @@
                 android:inputType="text"/>
             <ImageView
                 android:id="@+id/search_friend"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:background="@android:drawable/ic_search_category_default"/>
 
