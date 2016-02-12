@@ -2,10 +2,8 @@ package pinbox.com.pin.Api;
 
 
 
-import java.util.List;
-
+import pinbox.com.pin.Model.FriendModel;
 import pinbox.com.pin.Model.UserModel;
-import pinbox.com.pin.Model.Username;
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -34,5 +32,11 @@ public interface PinServiceApi {
 
     @POST("/update_name")
     Call<UserModel> updateName(@Body UserModel userModel);
+
+    @POST("/find_friend")
+    Call<FriendModel> findFriend(@Body FriendModel friendModel);
+
+    @POST("/new_friend")
+    Call<FriendModel> newFriend(@Body FriendModel friendModel);
 
 }
