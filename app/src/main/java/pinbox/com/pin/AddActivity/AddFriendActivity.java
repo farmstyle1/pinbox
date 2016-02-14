@@ -66,7 +66,7 @@ public class AddFriendActivity extends AppCompatActivity {
                         if (response.body().getStatus()){
                             saveFriend.setVisibility(View.GONE);
                             Toast.makeText(getApplication(), "เพิ่มในรายการเพิ่อน", Toast.LENGTH_SHORT).show();
-                            friendModel.setFriendID(null);
+
                         }
                     }
 
@@ -98,6 +98,7 @@ public class AddFriendActivity extends AppCompatActivity {
                     Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
 
                 } else {
+
                     searchID(friendEditText.getText().toString());
                 }
 
@@ -112,33 +113,34 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<UserModel> response) {
                 if (!TextUtils.isEmpty(response.body().getId())) {
-                    Log.d("check","finded");
                     friendName.setText(response.body().getName());
-                    profilePictureView.setVisibility(View.VISIBLE);
-
                     friendModel.setUserID(user);
-                    friendModel.setFriendID(response.body().getUsername());
-                    Call<FriendModel> callFriend = pinServiceApi.findFriend(friendModel);
-                    callFriend.enqueue(new Callback<FriendModel>() {
-                        @Override
-                        public void onResponse(Response<FriendModel> response) {
-                           if(!response.body().getStatus()){
-                               saveFriend.setVisibility(View.VISIBLE);
-                           }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-
-                        }
-                    });
-
                     profilePictureView.setProfileId(response.body().getUsername());
+                    if(!response.body().getUsername().equals(user)){
+                        friendModel.setFriendID(response.body().getUsername());
+
+                        Call<FriendModel> callFriend = pinServiceApi.findFriend(friendModel);
+                        callFriend.enqueue(new Callback<FriendModel>() {
+                            @Override
+                            public void onResponse(Response<FriendModel> response) {
+
+                                if(!response.body().getStatus()){
+                                    saveFriend.setVisibility(View.VISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+
+                            }
+                        });
+                    }
+
                 } else {
                     friendName.setText("");
                     profilePictureView.setProfileId(null);
                     saveFriend.setVisibility(View.GONE);
-                    Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplication(), "ไม่พบ ID ", Toast.LENGTH_SHORT).show();
                 }
 
             }

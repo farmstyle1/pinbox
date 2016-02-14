@@ -4,8 +4,8 @@ package pinbox.com.pin.Model;
  * Created by 015240 on 2/12/2016.
  */
 public class FriendModel {
-    String userID;
-    String friendID;
+    String userid;
+    String friendid;
     boolean status;
 
     public boolean getStatus() {
@@ -17,18 +17,18 @@ public class FriendModel {
     }
 
     public String getUserID() {
-        return userID;
+        return userid;
     }
 
     public String getFriendID() {
-        return friendID;
+        return friendid;
     }
 
     public void setUserID(String userID) {
-        this.userID = userID;
+        this.userid = userID;
     }
 
     public void setFriendID(String friendID) {
-        this.friendID = friendID;
+        this.friendid = friendID;
     }
 }

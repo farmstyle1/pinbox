@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                             finish();
                         }else{
 
-                            login(loginResult);
+                            login();
 
                         }
                     }
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    private void login(final LoginResult loginResult){
+    private void login(){
 
         Call<UserModel> call = pinServiceApi.newUser(userModel);
         call.enqueue(new Callback<UserModel>() {
@@ -154,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Response<UserModel> response) {
                                     helper.setUsername(userFacebook);
-                                    Log.d("check", "key " + userFacebook);
                                 }
 
                                 @Override
