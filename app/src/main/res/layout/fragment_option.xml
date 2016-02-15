@@ -43,19 +43,20 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
-        <ImageView
-            android:id="@+id/row_imageView1"
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/friendProfilePicture"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/button_border" />
+
+            />
 
         <TextView
-            android:id="@+id/row_user1"
+            android:id="@+id/row_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
-            android:text="Profile"
+
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#333333" />
 

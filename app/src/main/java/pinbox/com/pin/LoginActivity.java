@@ -9,18 +9,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONObject;
+
 import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Api.URL;
 import pinbox.com.pin.Helper.Helper;
+import pinbox.com.pin.Model.FriendModel;
 import pinbox.com.pin.Model.UserModel;
 import retrofit.Call;
 import retrofit.Callback;
@@ -95,12 +101,13 @@ public class LoginActivity extends AppCompatActivity {
                             if(!TextUtils.isEmpty(response.body().getId())) {
                                helper.setId(response.body().getId());
                             }
-                            helper.setUsername(userFacebook);
+                            helper.setUsername(userFacebook,response.body().getName());
 
                             Intent intent = new Intent(getApplication(), MainActivity.class);
                             startActivity(intent);
                             finish();
                         }else{
+
 
                             login();
 
@@ -140,43 +147,60 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    private void login(){
+    private void login() {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
 
-        Call<UserModel> call = pinServiceApi.newUser(userModel);
-        call.enqueue(new Callback<UserModel>() {
-            @Override
-            public void onResponse(Response<UserModel> response) {
-                if (response.body().getStatus()) {
+                        userModel.setName(Profile.getCurrentProfile().getFirstName());
+                        Call<UserModel> call = pinServiceApi.newUser(userModel);
+                        call.enqueue(new Callback<UserModel>() {
+                            @Override
+                            public void onResponse(Response<UserModel> response) {
 
-                            userModel.setName(Profile.getCurrentProfile().getFirstName());
-                            Call<UserModel> calls = pinServiceApi.updateName(userModel);
-                            calls.enqueue(new Callback<UserModel>() {
-                                @Override
-                                public void onResponse(Response<UserModel> response) {
-                                    helper.setUsername(userFacebook);
+                                if (response.body().getStatus()) {
+
+
+                                    helper.setUsername(userFacebook,userModel.getName());
+                                    FriendModel friendModel = new FriendModel();
+                                    friendModel.setUserID(userFacebook);
+                                    friendModel.setFriendID(userFacebook);
+                                    Call<FriendModel> newfriend = pinServiceApi.newFriend(friendModel);
+                                    newfriend.enqueue(new Callback<FriendModel>() {
+                                        @Override
+                                        public void onResponse(Response<FriendModel> response) {
+                                            Intent intent = new Intent(getApplication(), MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Throwable t) {
+
+                                        }
+                                    });
+
+
+
                                 }
+                            }
 
-                                @Override
-                                public void onFailure(Throwable t) {
+                            @Override
+                            public void onFailure(Throwable t) {
+                                Log.e("check", "faill " + t);
+                            }
+                        });
 
-                                }
-                            });
+                    }
+                });
+        request.executeAsync();
+        //userModel.setName(Profile.getCurrentProfile().getFirstName());
 
 
 
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("check", "faill " + t);
-            }
-        });
-
-        Intent intent = new Intent(getApplication(), MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+        }
 
 
 

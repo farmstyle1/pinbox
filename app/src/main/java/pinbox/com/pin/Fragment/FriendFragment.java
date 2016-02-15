@@ -45,37 +45,8 @@ public class FriendFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_friend, container, false);
 
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL.URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        helper = new Helper(getActivity());
-        user = helper.getUsername();
-        FriendModel friendModel = new FriendModel();
-        friendModel.setUserID(user);
-        pinServiceApi = retrofit.create(PinServiceApi.class);
-        Call<ArrayList<FriendModel>> callFriend = pinServiceApi.listFriend(friendModel);
-        callFriend.enqueue(new Callback<ArrayList<FriendModel>>() {
-            @Override
-            public void onResponse(Response<ArrayList<FriendModel>> response) {
-                    Log.d("check",response.body()+" ");
-                if(response.body().isEmpty()){
-                    Toast.makeText(getActivity(), "Empty ", Toast.LENGTH_SHORT).show();
-                }
-                    /*friendModelArrayList = response.body();
-                    friendListviewAdapter = new FriendListviewAdapter(getContext(), friendModelArrayList);
-                    friendListview = (ListView) rootView.findViewById(R.id.friend_listview);
-                    friendListview.setAdapter(friendListviewAdapter);*/
 
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Toast.makeText(getActivity(), t+"", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        friendListview = (ListView) rootView.findViewById(R.id.friend_listview);
         //Log.d("check", userModelArrayList.get(0).getName()+userModelArrayList.get(1).getName());
 
 
@@ -93,7 +64,32 @@ public class FriendFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        helper = new Helper(getActivity());
+        user = helper.getUsername();
+        FriendModel friendModel = new FriendModel();
+        friendModel.setUserID(user);
+        pinServiceApi = retrofit.create(PinServiceApi.class);
+        Call<ArrayList<FriendModel>> callFriend = pinServiceApi.listFriend(friendModel);
+        callFriend.enqueue(new Callback<ArrayList<FriendModel>>() {
+            @Override
+            public void onResponse(Response<ArrayList<FriendModel>> response) {
 
+                if(!response.body().isEmpty()){
+                    friendModelArrayList = response.body();
+                    friendListviewAdapter = new FriendListviewAdapter(getContext(), friendModelArrayList);
+                    friendListview.setAdapter(friendListviewAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
 }

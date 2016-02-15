@@ -3,6 +3,7 @@ package pinbox.com.pin.Adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import pinbox.com.pin.Fragment.ChatFragment;
 import pinbox.com.pin.Fragment.FriendFragment;
@@ -12,7 +13,7 @@ import pinbox.com.pin.Fragment.PlaceholderFragment;
 /**
  * Created by 015240 on 1/22/2016.
  */
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MainPagerAdapter extends FragmentStatePagerAdapter {
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
     }

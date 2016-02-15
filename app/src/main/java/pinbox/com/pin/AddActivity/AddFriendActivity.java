@@ -1,5 +1,6 @@
 package pinbox.com.pin.AddActivity;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import com.facebook.login.widget.ProfilePictureView;
 
 import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Api.URL;
+import pinbox.com.pin.Fragment.FriendFragment;
 import pinbox.com.pin.Helper.Helper;
 import pinbox.com.pin.Model.FriendModel;
 import pinbox.com.pin.Model.UserModel;

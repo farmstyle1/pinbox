@@ -30,10 +30,10 @@ public class Helper {
         return sharedPerfs.getString("KEY_LOCATION", null);
     }
 
-    public void setUsername(String username) {
+    public void setUsername(String username,String name) {
         editor.putBoolean("isLogin", true);
         editor.putString("KEY_USER", username);
-
+        editor.putString("KEY_NAME", name);
         editor.commit();
     }
     public void setId(String id) {
@@ -57,5 +57,8 @@ public class Helper {
     }
     public String getId() {
         return sharedPerfs.getString("KEY_ID", null);
+    }
+    public String getName() {
+        return sharedPerfs.getString("KEY_NAME", null);
     }
 }

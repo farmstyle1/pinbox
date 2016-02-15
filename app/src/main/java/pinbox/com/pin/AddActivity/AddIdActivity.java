@@ -11,7 +11,6 @@ import android.widget.Toast;
 import pinbox.com.pin.Api.PinServiceApi;
 import pinbox.com.pin.Api.URL;
 import pinbox.com.pin.Helper.Helper;
-import pinbox.com.pin.Helper.UserHelper;
 import pinbox.com.pin.Model.UserModel;
 import pinbox.com.pin.R;
 import retrofit.Call;
