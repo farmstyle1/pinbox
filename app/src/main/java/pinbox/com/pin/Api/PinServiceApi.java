@@ -2,6 +2,8 @@ package pinbox.com.pin.Api;
 
 
 
+import java.util.ArrayList;
+
 import pinbox.com.pin.Model.FriendModel;
 import pinbox.com.pin.Model.UserModel;
 import retrofit.Call;
@@ -21,6 +23,7 @@ public interface PinServiceApi {
     Call<UserModel> loadID(@Path("id")String id);
 
 
+
     @POST("/newuser")
     Call<UserModel> newUser(@Body UserModel userModel);
 
@@ -38,5 +41,8 @@ public interface PinServiceApi {
 
     @POST("/new_friend")
     Call<FriendModel> newFriend(@Body FriendModel friendModel);
+
+    @POST("/list_friend")
+    Call<ArrayList<FriendModel>> listFriend(@Body FriendModel friendModel);
 
 }
