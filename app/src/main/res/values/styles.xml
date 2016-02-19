@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlNormal">@color/red_hint</item>
+        <item name="colorControlActivated">@color/red_hint</item>
+        <item name="colorControlHighlight">@color/red_hint</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
