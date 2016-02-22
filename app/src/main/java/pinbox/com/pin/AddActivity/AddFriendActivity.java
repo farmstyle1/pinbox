@@ -35,7 +35,7 @@ public class AddFriendActivity extends AppCompatActivity {
     private ImageView searchImage;
     private EditText friendEditText;
     private TextView friendName;
-    private ProfilePictureView profilePictureView;
+    private pinbox.com.pin.Library.ProfilePictureView profilePictureView;
     private Button saveFriend;
     private PinServiceApi pinServiceApi;
     private String user;
@@ -54,7 +54,7 @@ public class AddFriendActivity extends AppCompatActivity {
                 .build();
         pinServiceApi = retrofit.create(PinServiceApi.class);
         friendModel = new FriendModel();
-        profilePictureView = (ProfilePictureView)findViewById(R.id.friendProfilePicture);
+        profilePictureView = (pinbox.com.pin.Library.ProfilePictureView) findViewById(R.id.friendProfilePicture);
         friendName = (TextView)findViewById(R.id.friend_name);
         saveFriend = (Button)findViewById(R.id.save_friend_button);
         saveFriend.setOnClickListener(new View.OnClickListener() {
@@ -85,28 +85,13 @@ public class AddFriendActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     searchID(friendEditText.getText().toString());
-                    return true;
+                    return false;
                 }
                 return false;
 
             }
         });
-        searchImage = (ImageView)findViewById(R.id.search_friend);
-        searchImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveFriend.setVisibility(View.GONE);
-                if (friendEditText.getText().toString().matches("")) {
-                    Toast.makeText(getApplication(), "ไม่พบ ID ดังกล่าว", Toast.LENGTH_SHORT).show();
 
-                } else {
-
-                    searchID(friendEditText.getText().toString());
-                }
-
-
-            }
-        });
     }
 
     private void searchID(String id){

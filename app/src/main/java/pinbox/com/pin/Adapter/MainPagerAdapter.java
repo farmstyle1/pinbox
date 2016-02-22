@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import pinbox.com.pin.Fragment.ChatFragment;
+import pinbox.com.pin.Fragment.EventFragment;
 import pinbox.com.pin.Fragment.FriendFragment;
 import pinbox.com.pin.Fragment.OptionFragment;
 import pinbox.com.pin.Fragment.PlaceholderFragment;
@@ -25,24 +26,21 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
         }else if (position==1){
             return new ChatFragment();
         }else if (position==2){
-            return new OptionFragment();
+            return new EventFragment();
+        } else if (position==3){
+        return new OptionFragment();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "SECTION 1";
-            case 1:
-                return "SECTION 2";
-        }
+
         return null;
     }
 }

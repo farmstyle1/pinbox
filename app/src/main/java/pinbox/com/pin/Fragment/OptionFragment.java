@@ -31,14 +31,14 @@ public class OptionFragment extends Fragment{
     private TextView currentID,name;
     private Helper helper;
     private String valCurrentID;
-    private ProfilePictureView profilePictureView;
+    private pinbox.com.pin.Library.ProfilePictureView profilePictureView;
 
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_option,container,false);
         helper = new Helper(getActivity());
 
-        profilePictureView = (ProfilePictureView)rootView.findViewById(R.id.friendProfilePicture);
+        profilePictureView = (pinbox.com.pin.Library.ProfilePictureView) rootView.findViewById(R.id.friendProfilePicture);
         profilePictureView.setProfileId(helper.getUsername());
         name = (TextView) rootView.findViewById(R.id.row_user);
         name.setText(helper.getName());

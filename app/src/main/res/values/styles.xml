@@ -7,9 +7,16 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="colorControlNormal">@color/red_hint</item>
-        <item name="colorControlActivated">@color/red_hint</item>
-        <item name="colorControlHighlight">@color/red_hint</item>
+        <item name="colorControlNormal">@color/gray</item>
+        <item name="colorControlActivated">@color/gray</item>
+        <item name="colorControlHighlight">@color/gray</item>
+
+
+    </style>
+
+    <style name="FacebookLoginButton">
+        <item name="android:background">@drawable/button_facebook</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">

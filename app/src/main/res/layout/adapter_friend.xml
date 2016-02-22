@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.facebook.login.widget.ProfilePictureView
+    <pinbox.com.pin.Library.ProfilePictureView
         android:id="@+id/friendProfilePicture"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:padding="6dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
 
         />
-    <TextView
-        android:id="@+id/friend_name"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_weight="2"
-        android:padding="@dimen/activity_horizontal_margin" />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_toRightOf="@+id/friendProfilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingLeft="10dp"
+            android:textSize="20sp"
+
+
+           />
+        <TextView
+            android:id="@+id/friend_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="10sp"
+
+
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

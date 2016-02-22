@@ -1,12 +1,17 @@
 package pinbox.com.pin;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +31,8 @@ public class LocationActivity extends AppCompatActivity {
 
     private Helper helper;
     private String cityName, user;
-    private TextView txtLocation;
+    private TextView txtSetLocation;
+    private LinearLayout layoutLocation;
     private Button btnCheckin;
     private PinServiceApi pinServiceApi;
     private FrameLayout skipLayout;
@@ -47,11 +53,17 @@ public class LocationActivity extends AppCompatActivity {
                 .build();
         pinServiceApi = retrofit.create(PinServiceApi.class);
 
-        txtLocation = (TextView) findViewById(R.id.txtLocation);
-
+        layoutLocation = (LinearLayout) findViewById(R.id.layout_location);
         btnCheckin = (Button) findViewById(R.id.btn_checkin);
+        AnimatorSet animatorSet = new AnimatorSet();
+        ObjectAnimator animator1 = ObjectAnimator.ofFloat(layoutLocation,View.TRANSLATION_Y,-150f);
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(btnCheckin,View.TRANSLATION_Y,450f);
+        animatorSet.playTogether(animator1,animator2);
+        animatorSet.setDuration(1000);
+        animatorSet.start();
+        txtSetLocation = (TextView) findViewById(R.id.txt_location);
 
-        txtLocation.setText(cityName);
+        txtSetLocation.setText(cityName);
 
         btnCheckin.setVisibility(View.VISIBLE);
         btnCheckin.setOnClickListener(new View.OnClickListener() {

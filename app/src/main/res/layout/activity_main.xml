@@ -8,24 +8,37 @@
     android:fitsSystemWindows="true"
     tools:context="pinbox.com.pin.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="40dp"
+        android:background="?attr/colorPrimary">
+        <TextView
+            android:id="@+id/txt_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
+    </android.support.design.widget.TextInputLayout>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="60dp"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </android.support.v7.widget.Toolbar>
+            android:layout_marginTop="40dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 
-    </android.support.design.widget.AppBarLayout>
+
+
+
+
+
 
 
         <android.support.v4.view.ViewPager
@@ -33,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:layout_marginTop="100dp" />
 
 
 

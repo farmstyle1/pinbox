@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#F44336</color>
+    <!--<color name="colorPrimary">#F44336</color>  version 1-->
+    <color name="colorPrimary">#e74c3c</color>
+    <color name="colorPrimaryDark">#e74c3c</color>
     <color name="colorAccent">#ffffff</color>
     <color name="primary">#ff3833</color>
     <!-- <color name="red">#F44336</color> -->
-    <color name="red">#e9443e</color>
+   <!-- <color name="red">#e9443e</color>  version 2-->
+   <!-- <color name="red">#fe736c</color>  version 3-->
+    <color name="red">#e74c3c</color>
+    <color name="red_chat">#fe736c</color>
     <color name="red_hint">#FFCDD2</color>
     <color name="white">#ffffff</color>
+    <color name="gray">#f6f6f6</color>
 </resources>

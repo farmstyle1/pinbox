@@ -25,6 +25,7 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
+
 /**
  * Created by Miki on 2/12/2016.
  */
@@ -55,7 +56,7 @@ public class FriendListviewAdapter extends BaseAdapter {
 
     private class ViewHolder {
 
-        ProfilePictureView profilePictureView;
+        pinbox.com.pin.Library.ProfilePictureView profilePictureView;
         TextView friendName;
         TextView friendLocation ;
 
@@ -73,9 +74,9 @@ public class FriendListviewAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            holder.profilePictureView = (ProfilePictureView)convertView.findViewById(R.id.friendProfilePicture);
+            holder.profilePictureView = (pinbox.com.pin.Library.ProfilePictureView)convertView.findViewById(R.id.friendProfilePicture);
             holder.friendName = (TextView)convertView.findViewById(R.id.friend_name);
-
+            holder.friendLocation = (TextView)convertView.findViewById(R.id.friend_location);
             FriendModel friendModel = friendModelArrayList.get(position);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(URL.URL)
@@ -94,7 +95,9 @@ public class FriendListviewAdapter extends BaseAdapter {
                     if (!TextUtils.isEmpty(response.body().getName())) {
 
                         finalHolder.friendName.setText(response.body().getName());
+                        finalHolder.friendLocation.setText(response.body().getLocation());
                         finalHolder.profilePictureView.setProfileId(response.body().getUsername());
+
                     }
 
 
