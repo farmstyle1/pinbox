@@ -55,12 +55,7 @@ public class LocationActivity extends AppCompatActivity {
 
         layoutLocation = (LinearLayout) findViewById(R.id.layout_location);
         btnCheckin = (Button) findViewById(R.id.btn_checkin);
-        AnimatorSet animatorSet = new AnimatorSet();
-        ObjectAnimator animator1 = ObjectAnimator.ofFloat(layoutLocation,View.TRANSLATION_Y,-150f);
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(btnCheckin,View.TRANSLATION_Y,450f);
-        animatorSet.playTogether(animator1,animator2);
-        animatorSet.setDuration(1000);
-        animatorSet.start();
+
         txtSetLocation = (TextView) findViewById(R.id.txt_location);
 
         txtSetLocation.setText(cityName);

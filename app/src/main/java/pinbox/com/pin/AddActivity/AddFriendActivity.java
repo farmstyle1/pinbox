@@ -84,7 +84,10 @@ public class AddFriendActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchID(friendEditText.getText().toString());
+                    if(!TextUtils.isEmpty(friendEditText.getText().toString())){
+                        searchID(friendEditText.getText().toString());
+                    }
+
                     return false;
                 }
                 return false;
